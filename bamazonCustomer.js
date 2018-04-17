@@ -51,10 +51,6 @@ function isValidOrder(idVal, quantity, productsArr) {
     var isQuantityValid = false;
 
     //if the id exists this is true
-    console.log(idArr);
-    console.log(idVal);
-    console.log(idArr.indexOf(parseInt(idVal, 10)));
-
     isIdValid = idArr.indexOf(parseInt(idVal, 10)) > -1;
 
     if (!isIdValid) {
@@ -87,8 +83,9 @@ function updateBamazon(idNumber, OrderQuantity, results) {
 function displayTotal(idNumber, OrderQuantity, results)
 {
     var price = results[(idNumber - 1)].price;
+    var item = results[(idNumber - 1)].product_name;
     var total = price * OrderQuantity;
-    console.log("ORDER TOTAL : $"+total);
+    console.log("ORDER TOTAL : $"+total+" for "+OrderQuantity+" "+item+"(s)");
     start();
 }
 
