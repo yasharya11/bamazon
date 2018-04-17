@@ -42,7 +42,6 @@ function start() {
 }
 
 function isValidOrder(idVal, quantity, productsArr) {
-    console.log("checking validity of order");
     var idArr = [1];
     for (var i = 0; i < productsArr.length; i++) {
         idArr.push(parseInt(productsArr[i].item_id));
@@ -77,15 +76,11 @@ function isValidOrder(idVal, quantity, productsArr) {
 function updateBamazon(idNumber, OrderQuantity, results) {
     var quantityVal = results[(idNumber - 1)].stock_quantity;
     var updatedQuantity = quantityVal - OrderQuantity;
-    console.log("Update started");
     var updateQuery = "UPDATE products SET stock_quantity = '"+updatedQuantity+"' WHERE item_id = '"+idNumber+"';";
-    console.log(updateQuery);
     connection.query(updateQuery, function (err) {
             if (err) {console.log(err);} throw err;
         }
     );
-    
-    console.log("Your ORDER was created successfully!");
     console.log(results[idNumber-1].product_name + " quantity changed from "+quantityVal+" to "+updatedQuantity);
 }
 
@@ -123,9 +118,7 @@ function buyProduct() {
 
                 isGoodOrder = isValidOrder(answer.idNumber, answer.quantity, results);
                 if (isGoodOrder) {
-                    console.log("UPDATE THE DATABASE");
                     updateBamazon(answer.idNumber, answer.quantity, results);
-                    console.log("DISPLAY THE TOTAL");
                     displayTotal(answer.idNumber, answer.quantity, results);
                     start();
                 } else {
