@@ -88,7 +88,8 @@ function displayTotal(idNumber, OrderQuantity, results)
 {
     var price = results[(idNumber - 1)].price;
     var total = price * OrderQuantity;
-    console.log("ORDER TOTAL : "+total);
+    console.log("ORDER TOTAL : $"+total);
+    start();
 }
 
 function buyProduct() {
@@ -120,7 +121,6 @@ function buyProduct() {
                 if (isGoodOrder) {
                     updateBamazon(answer.idNumber, answer.quantity, results);
                     displayTotal(answer.idNumber, answer.quantity, results);
-                    start();
                 } else {
                     console.log("BAD INPUT RESTARTING TRANSACTION");
                     start();
