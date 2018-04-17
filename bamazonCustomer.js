@@ -1,41 +1,3 @@
-/** bamazon pseudo code
- *  
- * getProductsArray(){
- *  goes into the database and grabs an array of all the objects and returns it
- * }
- * 
- * buyProduct(){
- *  productsArryay[] = getProductsArray();
- *  create a nice table to diplay all the products and print it int he CLI
- * }
- * 
- * getQuantityOfDifferentProducts(){
- *   look into the database and see how many different products are in it, then return it
- * }
- * 
- * verifyOrderValidity(input){
- *  get user input
- *  if input is valid accoring to getQuantityOfDifferentProducts() then return true else false
- * }
- * 
- * createOrder(){
- *  if (verifyOrderValidity(input))
- *  
- * }
- * 
- * runBamazon(){
- *  CONNECT TO DATABASE
- *  buyProduct()
- *  createOrder()
- * }
- * 
- * 
- * if exit = false {
- * runBamazon()
- * }
- */
-
-
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 
@@ -79,27 +41,31 @@ function start() {
     });
 }
 
-function isValidOrder(id, quantity, productsArr) {
+function isValidOrder(idVal, quantity, productsArr) {
     console.log("checking validity of order");
-    var idArr = [];
+    var idArr = [1];
     for(var i = 0; i < productsArr.length ; i++)
     {
-        idArr.push(productsArr[i].item_id);
+        idArr.push(parseInt(productsArr[i].item_id));
     }
 
     var isIdValid = false;
     var isQuantityValid = false;
     
     //if the id exists this is true
-    isIdValid = (idArr.indexOf(id) != -1);
+    console.log(idArr);
+    console.log(idVal);
+    console.log(idArr.indexOf(parseInt(idVal,10)));
 
-    if (isIdValid)
+    isIdValid = idArr.indexOf(parseInt(idVal,10)) > -1;
+
+    if (!isIdValid)
     {   
         console.log("Bad ID");
         return false;
     } else {
         console.log("ID is valid")
-        isQuantityValid = (productsArr[(id - 1)].stock_quantity >= quantity);
+        isQuantityValid = (productsArr[(idVal - 1)].stock_quantity >= quantity);
         if (isQuantityValid)
         {
             console.log("Quantity is valid");
@@ -117,7 +83,8 @@ function buyProduct() {
     if (err) throw err;
     for(var i = 0 ; i<results.length ; i++)
     {
-        console.log(results[i]);
+        product = results[i];
+        console.log("ProductID: "+product.item_id+" | Product: "+product.product_name+" | Deprtmnt: "+product.department_name+" | Price: $"+product.price+" | Stock: "+product.stock_quantity);
     }
     // once you have the items, prompt the user for which they'd like to bid on
     inquirer
@@ -134,9 +101,8 @@ function buyProduct() {
         }
       ])
       .then(function(answer) {
-        console.log(answer.idNumber);
-        console.log(answer.quantity);
-        var isGoodOrder = true;
+        var isGoodOrder = false;
+
         isGoodOrder = isValidOrder(answer.idNumber, answer.quantity, results);
         if(isGoodOrder)
         {
@@ -144,7 +110,7 @@ function buyProduct() {
             console.log("DISPLAY THE TOTAL");
             start();
         } else {
-            console.log("that input was shit homeboi");
+            console.log("BAD INPUT RESTARTING TRANSACTION");
             start();
         }
       });
